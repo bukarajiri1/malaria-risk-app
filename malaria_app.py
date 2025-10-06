@@ -115,20 +115,22 @@ if submitted:
     input_scaled = scaler.transform(input_data)
     prediction = model.predict(input_scaled)[0]
     risk_levels = {0: "Low", 1: "Medium", 2: "High"}
-    st.success(f"🧪 Predicted Malaria Risk: **{risk_levels[prediction]}**")
-       
-        #Radar chart of symptoms
-        labels = input_data.columns.tolist()
-        values = input_data.values.flatten().tolist()
-        
-        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
-        values += values[:1]
-        angles += angles[:1]
-        
-        fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
-        ax.plot(angles, values, 'o-', linewidth=2)
-        ax.fill(angles, values, alpha=0.25)
-        ax.set_thetagrids(np.degrees(angles[:-1]), labels)
-        st.subheader("Symptom Profile")
-        st.pyplot(fig)
-        
+    st.success(f"Predicted Malaria Risk: **{risk_levels[prediction]}**")
+
+    #Radar chart of symptoms
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    labels = input_data.columns.tolist()
+    values = input_data.values.flatten().tolist()
+
+    angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+    values += values[:1]
+    angles += angles[:1]
+
+    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    ax.plot(angles, values, 'o-', linewidth=2)
+    ax.fill(angles, values, alpha=0.25)
+    ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+    st.subheader("Symptom Profile")
+    st.pyplot(fig)
