@@ -1,9 +1,20 @@
 import streamlit as st
+import pandas as pd
+import joblib
+
+# Load model and scaler
+scaler = joblib.load("scaler.pkl")
+model = joblib.load("malaria_model.pkl")
+
+import streamlit as st
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 import joblib
+
+scaler = joblib.load("scaler.pkl")
+model = joblib.load("malaria_model.pkl")
 
 # Train model on synthetic data
 def train_model():
