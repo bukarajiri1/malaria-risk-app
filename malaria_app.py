@@ -110,27 +110,48 @@ st.subheader("Predicted Malaria Risk:")
 st.write(f"🩺 {risk_labels[prediction]}")
 
 
-if submitted:
-    input_data = pd.DataFrame([...])
-    input_scaled = scaler.transform(input_data)
-    prediction = model.predict(input_scaled)[0]
-    risk_levels = {0: "Low", 1: "Medium", 2: "High"}
-    st.success(f"Predicted Malaria Risk: **{risk_levels[prediction]}**")
+#Collect user input
+with st.form("malaria_form"):
+    temperature = st.number_input("Temperature (°C)", min_value=35.0, max_value=42.0, step=0.1)
+    nausea = st.slider("Nausea Level", 0, 5)
+    vomiting = st.slider("Vomiting", 0, 5)
+    body_pain = st.slider("Body Pain", 0, 5)
+    headache = st.slider("Headache", 0, 5)
+    appetite_loss = st.slider("Loss of Appetite", 0, 5)
+    dizziness = st.slider("Dizziness", 0, 5)
+    stomach_pain = st.slider("Stomach Pain", 0, 5)
+    weakness = st.slider("Body Weakness", 0, 5)
+    
+    submitted = st.form_submit_button("Predict Malaria Risk")
 
-    #Radar chart of symptoms
-    import matplotlib.pyplot as plt
-    import numpy as np
+    if submitted:
+        input_data = pd.DataFrame([[
+            temperature, nausea, vomiting, body_pain, headache,
+            appetite_loss, dizziness, stomach_pain, weakness
+        ]], columns=[
+            'Temperature', 'Nausea_Level', 'Vomiting', 'Body_Pain', 'Headache',
+            'Loss_of_Appetite', 'Dizziness', 'Stomach_Pain', 'Body_Weakness'
+        ])
+        
+        input_scaled = scaler.transform(input_data)
+        prediction = model.predict(input_scaled)[0]
+        risk_levels = {0: "Low", 1: "Medium", 2: "High"}
+        st.success(f" Predicted Malaria Risk: **{risk_levels[prediction]}**")
 
-    labels = input_data.columns.tolist()
-    values = input_data.values.flatten().tolist()
+        #Radar chart of symptoms
+        import matplotlib.pyplot as plt
+        import numpy as np
 
-    angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
-    values += values[:1]
-    angles += angles[:1]
+        labels = input_data.columns.tolist()
+        values = input_data.values.flatten().tolist()
 
-    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
-    ax.plot(angles, values, 'o-', linewidth=2)
-    ax.fill(angles, values, alpha=0.25)
-    ax.set_thetagrids(np.degrees(angles[:-1]), labels)
-    st.subheader("Symptom Profile")
-    st.pyplot(fig)
+        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+        values += values[:1]
+        angles += angles[:1]
+
+        fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+        ax.plot(angles, values, 'o-', linewidth=2)
+        ax.fill(angles, values, alpha=0.25)
+        ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+        st.subheader(" Symptom Profile")
+        st.pyplot(fig)
