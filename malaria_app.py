@@ -12,6 +12,8 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 import joblib
+import matplotlib.pyplot as plt
+
 
 scaler = joblib.load("scaler.pkl")
 model = joblib.load("malaria_model.pkl")
@@ -106,3 +108,21 @@ prediction = model.predict(input_scaled)[0]
 risk_labels = {0: "Low Risk", 1: "Medium Risk", 2: "High Risk"}
 st.subheader("Predicted Malaria Risk:")
 st.write(f"🩺 {risk_labels[prediction]}")
+
+
+
+#Radar chart of symptoms
+labels = input_data.columns.tolist()
+values = input_data.values.flatten().tolist()
+
+angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+values += values[:1]
+angles += angles[:1]
+
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+ax.plot(angles, values, 'o-', linewidth=2)
+ax.fill(angles, values, alpha=0.25)
+ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+st.subheader("Symptom Profile")
+st.pyplot(fig)
+
