@@ -109,7 +109,7 @@ risk_labels = {0: "Low Risk", 1: "Medium Risk", 2: "High Risk"}
 st.subheader("Predicted Malaria Risk:")
 st.write(f"🩺 {risk_labels[prediction]}")
 
-
+#####################Radar chart code##########################
 #Collect user input
 with st.form("malaria_form"):
     temperature = st.number_input("Temperature (°C)", min_value=35.0, max_value=42.0, step=0.1)
@@ -155,3 +155,40 @@ with st.form("malaria_form"):
         ax.set_thetagrids(np.degrees(angles[:-1]), labels)
         st.subheader(" Symptom Profile")
         st.pyplot(fig)
+
+
+#Malaria Hotspot Map
+import pydeck as pdk
+
+st.subheader("Malaria Hotspot Map")
+
+# Sample data (replace with real coordinates later)
+data = pd.DataFrame({
+    'lat': [12.0, 11.5, 12.3],
+    'lon': [8.5, 8.6, 8.4],
+    'risk': [2, 1, 2]
+})
+
+layer = pdk.Layer(
+    'ScatterplotLayer',
+    data=data,
+    get_position='[lon, lat]',
+    get_color='[255, 0, 0, 160]',
+    get_radius=5000,
+    pickable=True,
+    auto_highlight=True,
+)
+
+view_state = pdk.ViewState(
+    latitude=12.0,
+    longitude=8.5,
+    zoom=6,
+    pitch=0,
+)
+
+st.pydeck_chart(pdk.Deck(
+    layers=[layer],
+    initial_view_state=view_state,
+    tooltip={"text": "Risk Level: {risk}"}
+))
+
