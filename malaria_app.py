@@ -163,10 +163,12 @@ import pydeck as pdk
 st.subheader("Malaria Hotspot Map")
 
 # Sample data (replace with real coordinates later)
+# Realistic malaria hotspot data
 data = pd.DataFrame({
-    'lat': [12.0, 11.5, 12.3],
-    'lon': [8.5, 8.6, 8.4],
-    'risk': [2, 1, 2]
+    'lat': [12.0, 13.0, 11.5, 6.5, 4.8],
+    'lon': [8.5, 5.2, 13.1, 3.4, 6.9],
+    'location': ['Kano', 'Sokoto', 'Borno', 'Lagos', 'Rivers'],
+    'risk': [3, 3, 3, 1, 1]
 })
 
 layer = pdk.Layer(
@@ -189,6 +191,7 @@ view_state = pdk.ViewState(
 st.pydeck_chart(pdk.Deck(
     layers=[layer],
     initial_view_state=view_state,
-    tooltip={"text": "Risk Level: {risk}"}
+    #tooltip={"text": "Risk Level: {risk}"}
+    tooltip={"text": "Location: {location}\nRisk Level: {risk}"}
 ))
 
